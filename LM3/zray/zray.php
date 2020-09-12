@@ -9,12 +9,12 @@ namespace ZF3Extension;
 use Serializable,
     Traversable,
     Closure,
-    Zend\Mvc\MvcEvent,
-    Zend\Version\Version,
-    Zend\ModuleManager\Feature\ConfigProviderInterface,
+    Laminas\Mvc\MvcEvent,
+    Laminas\Version\Version,
+    Laminas\ModuleManager\Feature\ConfigProviderInterface,
     ReflectionObject,
     ReflectionProperty,
-    Zend\Stdlib\ArrayUtils;
+    Laminas\Stdlib\ArrayUtils;
 
 class ZF3 {
 
@@ -41,7 +41,7 @@ class ZF3 {
 			return;
 		}
 		
-		if ($event instanceof \Zend\Mvc\MvcEvent) {
+		if ($event instanceof \Laminas\Mvc\MvcEvent) {
 		    $name = $event->getName();
 		} else {
 			return;
@@ -105,7 +105,7 @@ class ZF3 {
         $Zend_Mvc_Application = $context['this'];
         $response = $Zend_Mvc_Application->getResponse();
 
-        //Zend\Http\PhpEnvironment\Response
+        //Laminas\Http\PhpEnvironment\Response
         $storage['response'][] = $response;
 
         // store the kept helpers info
@@ -137,13 +137,13 @@ class ZF3 {
         // Needs to filter csrf elements to avoid Session serialization that leads to error
         $elements = array();
         foreach ($form->getElements() as $element) {
-            if (!$element instanceof \Zend\Form\Element\Csrf) {
+            if (!$element instanceof \Laminas\Form\Element\Csrf) {
                 $elements[] = $element;
             } else {
                 $csrf = clone($element);
                 $csrfOptions = $element->getCsrfValidatorOptions();
                 $csrfOptions = array_merge($csrfOptions, array('name' => $element->getName()));
-                $csrf->setCsrfValidator(new \Zend\Validator\Csrf($csrfOptions));
+                $csrf->setCsrfValidator(new \Laminas\Validator\Csrf($csrfOptions));
                 $elements[] = $csrf;
             }
         }
@@ -160,7 +160,7 @@ class ZF3 {
 
     private function collectVersionData(&$storage) {
         
-        if (! class_exists('Zend\Version\Version') || $this->isLatestVersionSaved){
+        if (! class_exists('Laminas\Version\Version') || $this->isLatestVersionSaved){
             return;
         }
         $storage['version'][] = array('version' => Version::VERSION);
@@ -220,7 +220,7 @@ class ZF3 {
         
         $request = $mvcEvent->getRequest();
         $method = '';
-        if (get_class($request) == 'Zend\Console\Request') {
+        if (get_class($request) == 'Laminas\Console\Request') {
             $method = 'CLI';
         } else {
             $method = $request->getMethod();
@@ -334,12 +334,12 @@ $zre = new \ZRayExtension("ZF3");
 $zre->setMetadata(array(
     'logo' => __DIR__ . DIRECTORY_SEPARATOR . 'logo.png',
 ));
-$zre->setEnabledAfter('Zend\Mvc\Application::init');
+$zre->setEnabledAfter('Laminas\Mvc\Application::init');
 $ZF3Storage->setZRE($zre);
 
-$zre->traceFunction("Zend\EventManager\EventManager::triggerListeners",  function(){}, array($ZF3Storage, 'storeTriggerExit'));
-$zre->traceFunction("Zend\View\Renderer\PhpRenderer::plugin",  function(){}, array($ZF3Storage, 'storeHelperExit'));
-$zre->traceFunction("Zend\Mvc\Application::run",  function(){}, array($ZF3Storage, 'storeApplicationExit'));
-$zre->traceFunction("Zend\ModuleManager\Listener\ConfigListener::onLoadModule", function(){}, array($ZF3Storage, 'storeModulesInfoExit'));
-$zre->traceFunction("Zend\Form\View\Helper\Form::render", function(){}, array($ZF3Storage, 'storeFormInfoExit'));
-$zre->traceFunction("Zend\Form\View\Helper\Form::openTag", function(){}, array($ZF3Storage, 'storeFormInfoExit'));
+$zre->traceFunction("Laminas\EventManager\EventManager::triggerListeners",  function(){}, array($ZF3Storage, 'storeTriggerExit'));
+$zre->traceFunction("Laminas\View\Renderer\PhpRenderer::plugin",  function(){}, array($ZF3Storage, 'storeHelperExit'));
+$zre->traceFunction("Laminas\Mvc\Application::run",  function(){}, array($ZF3Storage, 'storeApplicationExit'));
+$zre->traceFunction("Laminas\ModuleManager\Listener\ConfigListener::onLoadModule", function(){}, array($ZF3Storage, 'storeModulesInfoExit'));
+$zre->traceFunction("Laminas\Form\View\Helper\Form::render", function(){}, array($ZF3Storage, 'storeFormInfoExit'));
+$zre->traceFunction("Laminas\Form\View\Helper\Form::openTag", function(){}, array($ZF3Storage, 'storeFormInfoExit'));
