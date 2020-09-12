@@ -4,7 +4,7 @@
     Version: 1.00
 **********************************/
 
-namespace ZF3Extension;
+namespace LM3Extension;
 
 use Serializable,
     Traversable,
@@ -16,7 +16,7 @@ use Serializable,
     ReflectionProperty,
     Laminas\Stdlib\ArrayUtils;
 
-class ZF3 {
+class LM3 {
 
     private $isConfigSaved = false;
     private $isModulesSaved = false;
@@ -34,7 +34,7 @@ class ZF3 {
         
 		$event = $context["functionArgs"][0];
 		
-		// to sure that it's ZF3
+		// to sure that it's LM3
 		if  (is_string($event)) {
 			// disable extension - in ZF2 the first parma is $name - string
 			$this->zre->setEnabled(false);
@@ -326,20 +326,20 @@ class ZF3 {
 class ClosureStub {
 }
 
-$ZF3Storage = new ZF3();
+$LM3Storage = new LM3();
 
-// Allocate ZRayExtension for namespace "ZF3"
-$zre = new \ZRayExtension("ZF3");
+// Allocate ZRayExtension for namespace "LM3"
+$zre = new \ZRayExtension("LM3");
 
 $zre->setMetadata(array(
     'logo' => __DIR__ . DIRECTORY_SEPARATOR . 'logo.png',
 ));
 $zre->setEnabledAfter('Laminas\Mvc\Application::init');
-$ZF3Storage->setZRE($zre);
+$LM3Storage->setZRE($zre);
 
-$zre->traceFunction("Laminas\EventManager\EventManager::triggerListeners",  function(){}, array($ZF3Storage, 'storeTriggerExit'));
-$zre->traceFunction("Laminas\View\Renderer\PhpRenderer::plugin",  function(){}, array($ZF3Storage, 'storeHelperExit'));
-$zre->traceFunction("Laminas\Mvc\Application::run",  function(){}, array($ZF3Storage, 'storeApplicationExit'));
-$zre->traceFunction("Laminas\ModuleManager\Listener\ConfigListener::onLoadModule", function(){}, array($ZF3Storage, 'storeModulesInfoExit'));
-$zre->traceFunction("Laminas\Form\View\Helper\Form::render", function(){}, array($ZF3Storage, 'storeFormInfoExit'));
-$zre->traceFunction("Laminas\Form\View\Helper\Form::openTag", function(){}, array($ZF3Storage, 'storeFormInfoExit'));
+$zre->traceFunction("Laminas\EventManager\EventManager::triggerListeners",  function(){}, array($LM3Storage, 'storeTriggerExit'));
+$zre->traceFunction("Laminas\View\Renderer\PhpRenderer::plugin",  function(){}, array($LM3Storage, 'storeHelperExit'));
+$zre->traceFunction("Laminas\Mvc\Application::run",  function(){}, array($LM3Storage, 'storeApplicationExit'));
+$zre->traceFunction("Laminas\ModuleManager\Listener\ConfigListener::onLoadModule", function(){}, array($LM3Storage, 'storeModulesInfoExit'));
+$zre->traceFunction("Laminas\Form\View\Helper\Form::render", function(){}, array($LM3Storage, 'storeFormInfoExit'));
+$zre->traceFunction("Laminas\Form\View\Helper\Form::openTag", function(){}, array($LM3Storage, 'storeFormInfoExit'));
