@@ -1,6 +1,6 @@
 <?php
 /*********************************
-    Zend Framework 3 Z-Ray Extension
+    Laminas Framework 3 Z-Ray Extension
     Version: 1.00
 **********************************/
 
@@ -102,8 +102,8 @@ class ZF3 {
     }
 
     public function storeApplicationExit($context, &$storage) {
-        $Zend_Mvc_Application = $context['this'];
-        $response = $Zend_Mvc_Application->getResponse();
+        $Laminas_Mvc_Application = $context['this'];
+        $response = $Laminas_Mvc_Application->getResponse();
 
         //Laminas\Http\PhpEnvironment\Response
         $storage['response'][] = $response;
